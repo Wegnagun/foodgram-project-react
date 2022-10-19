@@ -18,6 +18,6 @@
 `pip install --upgrade setuptools ` опционально...  
 `python -m pip install --upgrade pip setuptools` либо так)  
 
-перейти в дирректорию api_yamdb  
+перейти в дирректорию backend  
 
 `pip install -r requirements.txt `
