@@ -4,11 +4,7 @@ __pycache__/
 *$py.class
 
 # папки со статикой и медиа
-/static/
-backend/static/
-backend/media/
-
-/media/
+media/
 static/
 
 # C extensions
