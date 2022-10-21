@@ -6,8 +6,6 @@ __pycache__/
 # C extensions
 *.so
 
-.static/
-static/
 # Distribution / packaging
 .Python
 build/
@@ -132,3 +130,8 @@ dmypy.json
 
 # .idea
 .idea
+
+# папки со статикой и медиа
+static/
+backend/static/
+backend/media/
