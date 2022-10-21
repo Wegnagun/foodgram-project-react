@@ -3,6 +3,11 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+media/
+media_backend/
+static/
+static_backend/
+
 # C extensions
 *.so
 
@@ -132,6 +137,6 @@ dmypy.json
 .idea
 
 # папки со статикой и медиа
-static/
-backend/static/
-backend/media/
+/static/
+/backend/static/
+/backend/media/
