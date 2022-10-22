@@ -32,18 +32,16 @@ class CustomUser(AbstractUser, PermissionsMixin):
     first_name = models.CharField(
         max_length=150,
         verbose_name='Имя',
-        blank=True,
     )
     last_name = models.CharField(
         max_length=150,
         verbose_name='Фамилия',
-        blank=True,
     )
     is_superuser = models.BooleanField('Администратор', default=False)
     is_blocked = models.BooleanField('Заблокирован', default=False)
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['username']
+    REQUIRED_FIELDS = ['password', 'username', 'first_name', 'last_name']
     objects = CustomUserManager()
 
     class Meta:
