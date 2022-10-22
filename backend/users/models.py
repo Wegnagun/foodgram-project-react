@@ -31,11 +31,13 @@ class CustomUser(AbstractUser, PermissionsMixin):
     )
     first_name = models.CharField(
         max_length=150,
-        verbose_name='Имя'
+        verbose_name='Имя',
+        blank=True,
     )
     last_name = models.CharField(
         max_length=150,
-        verbose_name='Фамилия'
+        verbose_name='Фамилия',
+        blank=True,
     )
     is_superuser = models.BooleanField('Администратор', default=False)
     is_blocked = models.BooleanField('Заблокирован', default=False)
