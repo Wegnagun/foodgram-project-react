@@ -1,11 +1,12 @@
+from django.shortcuts import get_object_or_404
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
-from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 
-from .pagination import CustomPagination
-from .serializers import CustomUserSerializer
 from users.models import CustomUser
+from .pagination import CustomPagination
+from .serializers import CustomUserSerializer, UserDetailSerializer
 
 
 class UsersViewSet(viewsets.ModelViewSet):
@@ -28,4 +29,10 @@ class UsersViewSet(viewsets.ModelViewSet):
         serializer.save()
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+
+class UserDetailViewSet(viewsets.ModelViewSet):
+    """Контроллер профиля пользователя."""
+    pagination_class = CustomPagination
+    queryset = CustomUser.objects.all()
+    serializer_class = CustomUserSerializer
 

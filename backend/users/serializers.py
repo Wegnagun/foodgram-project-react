@@ -19,3 +19,13 @@ class CustomUserSerializer(serializers.ModelSerializer):
         result.pop('password', None)
         return result
 
+
+class UserDetailSerializer(serializers.ModelSerializer):
+    """Сериализатор профиля пользователя."""
+
+    class Meta:
+        model = CustomUser
+        fields = ('email', 'id', 'username', 'first_name', 'last_name',
+                  'password', 'is_superuser', 'is_blocked',)  # 'is_subscribed'
+        read_only_fields = ('is_superuser', 'is_blocked',)
+
