@@ -7,7 +7,7 @@
 `venv/Scripts/activate `  
 `python -m pip install --upgrade pip `
 
-перейти в дирректорию api_yamdb  
+перейти в дирректорию backend  
 
 `pip install -r requirements.txt `
 
