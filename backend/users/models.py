@@ -41,7 +41,7 @@ class CustomUser(AbstractUser, PermissionsMixin):
     is_blocked = models.BooleanField('Заблокирован', default=False)
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['password', 'username', 'first_name', 'last_name']
+    REQUIRED_FIELDS = ['username', 'first_name', 'last_name', 'password']
     objects = CustomUserManager()
 
     class Meta:
