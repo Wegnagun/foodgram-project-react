@@ -30,6 +30,10 @@ class Recipe(models.Model):
         on_delete=models.CASCADE,
         verbose_name='Автор рецепта'
     )
+    pub_date = models.DateTimeField(
+        verbose_name='Дата публикации',
+        auto_now_add=True
+    )
     # ingredients=models.ManyToManyField(
     #     Ingredient,
     #     through='IngredientRecipe',
@@ -40,8 +44,19 @@ class Recipe(models.Model):
         validators=[
             MinValueValidator(1, 'Не менее 1')
         ],
-        verbose_name='Время приготовления, мин.'
+        verbose_name='Время приготовления, мин.',
+        help_text=(
+            "Не может быть меньше минуты!"
+        ),
     )
     # is_favorited = False,
     # is_in_shopping_cart = False
+
+    class Meta:
+        ordering = ('-pub_date',)
+        verbose_name = 'Рецепт'
+        verbose_name_plural = 'Рецепты'
+
+    def __str__(self):
+        return self.name
 

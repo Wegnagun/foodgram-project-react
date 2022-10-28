@@ -1,8 +1,13 @@
 from rest_framework import viewsets
 from .models import Recipe
-from .serializers import TagSerializer
+from .serializers import RecipesSerializer
+from users.pagination import CustomPagination
+from django_filters.rest_framework import DjangoFilterBackend
 
 
-class RecipeViewSet(viewsets.ModelViewSet):
+class RecipesViewSet(viewsets.ModelViewSet):
     """Контроллер рецептов."""
-    pass
+    queryset = Recipe.objects.all()
+    serializer_class = RecipesSerializer
+    pagination_class = CustomPagination
+    filter_backends = (DjangoFilterBackend,)
