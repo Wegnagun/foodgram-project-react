@@ -23,6 +23,7 @@ INSTALLED_APPS = [
     'users',
     'api',
     'tags',
+    'recipes',
 ]
 
 MIDDLEWARE = [
