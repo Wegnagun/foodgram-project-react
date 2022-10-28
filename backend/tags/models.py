@@ -15,9 +15,11 @@ class Tag(models.Model):
         ),
     )
     color = ColorField(
+        default='#FF0000',
         format='hex',
-        verbose_name='HEX-код цвета'
-    ),
+        verbose_name='HEX-код цвета',
+        max_length=7,
+    )
     slug = models.SlugField(
         max_length=200,
         verbose_name='Slug',
@@ -34,4 +36,4 @@ class Tag(models.Model):
         verbose_name_plural = 'Тэги'
 
     def __str__(self):
-        return self.slug
+        return self.name
