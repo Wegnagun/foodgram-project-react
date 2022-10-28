@@ -1,11 +1,12 @@
 from django.contrib import admin
+
 from .models import CustomUser
 
 
 class BaseAdminSettings(admin.ModelAdmin):
     """Базовая кастомизация админ панели."""
     empty_value_display = '-пусто-'
-    list_filter = ('email', 'username')
+    list_filter = ('email', 'username')  # добавить таги потом
 
 
 class CustomUserAdmin(BaseAdminSettings):
