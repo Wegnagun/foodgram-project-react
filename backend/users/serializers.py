@@ -29,3 +29,10 @@ class UserDetailSerializer(serializers.ModelSerializer):
                   'password', 'is_superuser', 'is_blocked',)  # 'is_subscribed'
         read_only_fields = ('is_superuser', 'is_blocked',)
 
+
+class PasswordSerializer(serializers.ModelSerializer):
+    """Сериализатор пароля."""
+
+    new_password = serializers.CharField(required=True)
+    current_password = serializers.CharField(required=True)
+

@@ -27,3 +27,23 @@
 перейти в дирректорию backend  
 
 `pip install -r requirements.txt `
+
+Регистрация нового пользователя:
+```
+POST /api/v1/auth/signup/
+
+{
+  "email": "string",
+  "username": "string"
+}
+```
+
+Получение JWT-токена:
+```
+POST api/auth/token/login/
+
+{
+  "email": "string",
+  "password": "string"
+}
+```
