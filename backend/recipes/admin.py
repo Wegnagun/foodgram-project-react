@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 from users.admin import BaseAdminSettings
-from .models import Recipe
+from .models import Recipe, Ingredient
 
 
 class RecipesAdmin(BaseAdminSettings):
@@ -18,4 +18,16 @@ class RecipesAdmin(BaseAdminSettings):
     filter_horizontal = ('tags',)
 
 
+class IngredientAdmin(BaseAdminSettings):
+    """Отображаемые поля админки раздела ингридиенты."""
+    list_display = (
+        'name',
+        'measurement_unit'
+    )
+    list_display_links = ('name',)
+    search_fields = ('name',)
+    list_filter = ('name',)
+
+
 admin.site.register(Recipe, RecipesAdmin)
+admin.site.register(Ingredient, IngredientAdmin)

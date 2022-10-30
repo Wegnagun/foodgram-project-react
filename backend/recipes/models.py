@@ -7,6 +7,30 @@ from tags.models import Tag
 User = get_user_model()
 
 
+class Ingredient(models.Model):
+    name = models.CharField(
+        max_length=250,
+        verbose_name='Наименование ингредиента',
+        db_index=True,
+        unique=True,
+        error_messages={
+            "unique": "Такой ингридиент уже есть.",
+        },
+    )
+    measurement_unit = models.CharField(
+        max_length=200,
+        verbose_name='Единица измерения'
+    )
+
+    class Meta:
+        verbose_name = 'Ингредиент'
+        verbose_name_plural = 'Ингредиенты'
+        ordering = ('name',)
+
+    def __str__(self):
+        return f'{self.name}/{self.measurement_unit}'
+
+
 class Recipe(models.Model):
     """Модель рецептов."""
     name = models.CharField(
@@ -34,12 +58,12 @@ class Recipe(models.Model):
         verbose_name='Дата публикации',
         auto_now_add=True
     )
-    # ingredients=models.ManyToManyField(
-    #     Ingredient,
-    #     through='IngredientRecipe',
-    #     related_name='recipes',
-    #     verbose_name='Ингредиенты в рецепте'
-    # )
+    ingredients = models.ManyToManyField(
+        Ingredient,
+        # through='IngredientRecipe',
+        related_name='recipes',
+        verbose_name='Ингредиенты в рецепте'
+    )
     cooking_time = models.PositiveSmallIntegerField(
         validators=[
             MinValueValidator(1, 'Не менее 1')
@@ -59,4 +83,3 @@ class Recipe(models.Model):
 
     def __str__(self):
         return self.name
-
