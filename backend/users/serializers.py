@@ -18,6 +18,8 @@ class CustomUserSerializer(serializers.ModelSerializer):
         """ Возвращаем результаты работы сериализатора."""
         result = super(CustomUserSerializer, self).to_representation(obj)
         result.pop('password', None)
+        result.pop('is_superuser', None)
+        result.pop('is_blocked', None)
         return result
 
 

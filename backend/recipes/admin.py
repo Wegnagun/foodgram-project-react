@@ -12,10 +12,10 @@ class RecipesAdmin(BaseAdminSettings):
         # 'in_favorite'
     )
     search_fields = ('name',)
-    list_filter = ('author', 'name', 'tags')
+    list_filter = ('author', 'name', 'tags', 'ingredients')
     list_display_links = ('name',)
     # readonly_fields = ('in_favorite',)
-    filter_horizontal = ('tags',)
+    filter_horizontal = ('tags', 'ingredients')
 
 
 class IngredientAdmin(BaseAdminSettings):
