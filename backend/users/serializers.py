@@ -63,3 +63,29 @@ class PasswordSerializer(serializers.ModelSerializer):
         user.set_password(password)
         user.save()
         return user
+
+
+class UsersListSerialiser(serializers.ModelSerializer):
+    """Сериализатор списка пользователей."""
+    is_subscribed = serializers.SerializerMethodField()
+
+    class Meta:
+        model = CustomUser
+        fields = (
+            "email", "id", "username", "first_name", "last_name",
+            "is_subscribed"
+        )
+
+    def get_is_subscribed(self, obj):
+        request = self.context.get("request")
+        if (
+            request
+            and hasattr(request, "user")
+            and request.user.is_authenticated
+        ):
+            # Вообще наверное это плохая реализация,
+            # каждый раз запрашиваем из БД
+            return request.user.follower.filter(author=obj).exists()
+        else:
+            # Я хз что еще возвращать, если не авторизован
+            return False
