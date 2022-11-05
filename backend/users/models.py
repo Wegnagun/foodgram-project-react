@@ -2,7 +2,6 @@ from django.contrib.auth.models import AbstractUser, PermissionsMixin
 from django.contrib.auth.validators import UnicodeUsernameValidator
 from django.db import models
 from .managers import CustomUserManager
-# from recipes.models import IngredientInRecipe
 
 
 class CustomUser(AbstractUser, PermissionsMixin):
@@ -71,31 +70,6 @@ class CustomUser(AbstractUser, PermissionsMixin):
             user=self,
             author=obj
         ).delete()
-
-    # def clear_shopping_cart(self):
-    #     self.purchases.all().delete()
-    #
-    # def get_shopping_cart(self):
-    #     purchases = self.purchases
-    #     if not purchases.exists():
-    #         return None
-    #     user_recipes_for_shopping = [
-    #         purchase.recipe.name for purchase in purchases.all()
-    #     ]
-    #     shopping_cart = IngredientInRecipe.objects.filter(
-    #         recipe__purchases__user=self
-    #     ).values(
-    #         ingredient_name=models.F('ingredient__name'),
-    #         ingredient_measurement_unit=
-    #         models.F('ingredient__measurement_unit'),
-    #     ).annotate(
-    #         ingredient_amount=models.Sum('amount'),
-    #     ).order_by('ingredient_name')
-    #
-    #     return {
-    #         'recipes_in_cart': user_recipes_for_shopping,
-    #         'purchases': shopping_cart
-    #     }
 
     def __str__(self):
         return self.username

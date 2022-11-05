@@ -10,9 +10,9 @@ class CustomUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
         fields = ('email', 'id', 'username', 'first_name', 'last_name',
-                  'password', 'is_superuser', 'is_blocked',)  # 'is_subscribed'
+                  'password', 'is_superuser', 'is_blocked')
         read_only_fields = ('is_superuser', 'is_blocked',)
-        # extra_kwargs = {'is_subscribed': {'required': False}}
+        extra_kwargs = {'is_subscribed': {'required': False}}
 
     def to_representation(self, obj):
         """ Возвращаем результаты работы сериализатора."""
@@ -65,7 +65,7 @@ class PasswordSerializer(serializers.ModelSerializer):
         return user
 
 
-class UsersListSerialiser(serializers.ModelSerializer):
+class UsersListSerializer(serializers.ModelSerializer):
     """Сериализатор списка пользователей."""
     is_subscribed = serializers.SerializerMethodField()
 
@@ -83,9 +83,5 @@ class UsersListSerialiser(serializers.ModelSerializer):
             and hasattr(request, "user")
             and request.user.is_authenticated
         ):
-            # Вообще наверное это плохая реализация,
-            # каждый раз запрашиваем из БД
             return request.user.follower.filter(author=obj).exists()
-        else:
-            # Я хз что еще возвращать, если не авторизован
-            return False
+        return False

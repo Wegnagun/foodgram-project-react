@@ -1,11 +1,13 @@
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
-from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from users.models import CustomUser
 from .pagination import CustomPagination
-from .serializers import CustomUserSerializer, PasswordSerializer
+from .serializers import (
+    CustomUserSerializer, PasswordSerializer
+)
 
 
 class UsersViewSet(viewsets.ModelViewSet):

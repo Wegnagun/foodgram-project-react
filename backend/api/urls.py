@@ -13,7 +13,5 @@ urlpatterns = [
     path('', include('djoser.urls')),
     path('', include('tags.urls')),
     path('', include('recipes.urls')),
-    # path('users/set_password', ChangePasswordView.as_view(),
-    #      name='set_password'),
     path('auth/', include('djoser.urls.authtoken')),
 ]
