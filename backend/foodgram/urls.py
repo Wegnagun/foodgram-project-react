@@ -7,5 +7,9 @@ admin.site.site_title = 'Админка сайта Foodgram'
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include('api.urls')),
+    path('api/', include('djoser.urls')),
+    path('api/', include('tags.urls')),
+    path('api/', include('recipes.urls')),
+    path('api/', include('users.urls')),
+    path('auth/', include('djoser.urls.authtoken')),
 ]

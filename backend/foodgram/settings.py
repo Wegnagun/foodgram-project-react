@@ -21,7 +21,6 @@ INSTALLED_APPS = [
     'djoser',
     'colorfield',
     'users',
-    'api',
     'tags',
     'recipes',
 ]
