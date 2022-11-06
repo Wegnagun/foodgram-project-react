@@ -11,7 +11,7 @@ TABLES = [
 
 
 class Command(BaseCommand):
-    help = 'import data from json to base'
+    help = 'загрузка данныз из json в базу'
 
     def handle(self, *args, **options):
         options_list = (options['t'], options['i'])

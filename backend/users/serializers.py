@@ -1,25 +1,31 @@
 from django.contrib.auth.password_validation import validate_password
 from rest_framework import serializers
 
-from .models import CustomUser
+from .models import CustomUser, Follow
 
 
 class CustomUserSerializer(serializers.ModelSerializer):
     """Сериализатор модели пользователей."""
+    is_subscribed = serializers.SerializerMethodField()
 
     class Meta:
         model = CustomUser
         fields = ('email', 'id', 'username', 'first_name', 'last_name',
-                  'password', 'is_superuser', 'is_blocked')
-        read_only_fields = ('is_superuser', 'is_blocked',)
+                  'password', 'is_subscribed')
         extra_kwargs = {'is_subscribed': {'required': False}}
+
+    def get_is_subscribed(self, obj: CustomUser):
+        request = self.context.get('request')
+        if not request or request.user.is_anonymous:
+            return False
+        return Follow.objects.filter(
+            user=request.user, author=obj).exists()
 
     def to_representation(self, obj):
         """ Возвращаем результаты работы сериализатора."""
         result = super(CustomUserSerializer, self).to_representation(obj)
         result.pop('password', None)
         result.pop('is_superuser', None)
-        result.pop('is_blocked', None)
         return result
 
 
@@ -29,8 +35,8 @@ class UserDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
         fields = ('email', 'id', 'username', 'first_name', 'last_name',
-                  'password', 'is_superuser', 'is_blocked',)  # 'is_subscribed'
-        read_only_fields = ('is_superuser', 'is_blocked',)
+                  'password', 'is_subscribed',)
+        read_only_fields = ('is_superuser',)
 
 
 class PasswordSerializer(serializers.ModelSerializer):

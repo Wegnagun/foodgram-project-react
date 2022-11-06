@@ -1,8 +1,10 @@
 from django.db.transaction import atomic
+from django.shortcuts import get_object_or_404
 from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers
 
 from tags.serializers import TagSerializer
+from users.models import Follow, CustomUser
 from users.serializers import CustomUserSerializer
 from .models import (
     Recipe, Ingredient, IngredientInRecipe, Favorite, Purchase, Tag
@@ -176,7 +178,7 @@ class RecipeCreateSerializer(serializers.ModelSerializer):
         ).data
 
 
-class RecipeShortInfo(serializers.ModelSerializer):
+class RecipeShortInfoSerializer(serializers.ModelSerializer):
     """Краткая инфа о рецепте."""
     class Meta:
         model = Recipe
@@ -207,7 +209,7 @@ class PurchaseSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         request = self.context.get('request')
         context = {'request': request}
-        return RecipeShortInfo(
+        return RecipeShortInfoSerializer(
             instance.recipe,
             context=context).data
 
@@ -231,6 +233,69 @@ class FavoriteSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         request = self.context.get('request')
         context = {'request': request}
-        return RecipeShortInfo(
+        return RecipeShortInfoSerializer(
             instance.recipe, context=context).data
 
+
+class FollowListSerializer(serializers.ModelSerializer):
+    """Сериализатор подписок."""
+    recipes = serializers.SerializerMethodField()
+    recipes_count = serializers.SerializerMethodField()
+    is_subscribed = serializers.SerializerMethodField(read_only=True)
+
+    class Meta:
+        model = CustomUser
+        fields = (
+            'email', 'id', 'username', 'first_name', 'last_name',
+            'is_subscribed', 'recipes', 'recipes_count'
+        )
+
+    def get_recipes_count(self, author):
+        return Recipe.objects.filter(author=author).count()
+
+    def get_recipes(self, author):
+        queryset = self.context.get('request')
+        recipes_limit = queryset.query_params.get('recipes_limit')
+        if not recipes_limit:
+            return RecipeShortInfoSerializer(
+                Recipe.objects.filter(author=author),
+                many=True, context={'request': queryset}
+            ).data
+        return RecipeShortInfoSerializer(
+            Recipe.objects.filter(author=author)[:int(recipes_limit)],
+            many=True,
+            context={'request': queryset}
+        ).data
+
+    def get_is_subscribed(self, author):
+        return Follow.objects.filter(
+            user=self.context.get('request').user,
+            author=author
+        ).exists()
+
+
+class FollowSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Follow
+        fields = ('user', 'author')
+
+    def validate(self, data):
+        get_object_or_404(CustomUser, username=data['author'])
+        if self.context['request'].user == data['author']:
+            raise serializers.ValidationError({
+                'errors': 'Ты не пожешь подписаться на себя.'
+            })
+        if Follow.objects.filter(
+                user=self.context['request'].user,
+                author=data['author']
+        ):
+            raise serializers.ValidationError({
+                'errors': 'Уже подписан.'
+            })
+        return data
+
+    def to_representation(self, instance):
+        return FollowListSerializer(
+            instance.author,
+            context={'request': self.context.get('request')}
+        ).data
