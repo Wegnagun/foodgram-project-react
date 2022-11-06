@@ -9,7 +9,7 @@ services:
       - ../backend/.env
 
   backend:
-    image: wegnagun/foodgram:v1
+    image: wegnagun/foodgram:v2
     restart: always
     volumes:
       - static_value:/app/static/
