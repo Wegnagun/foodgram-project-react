@@ -177,7 +177,7 @@ class RecipeCreateSerializer(serializers.ModelSerializer):
 
 
 class RecipeShortInfo(serializers.ModelSerializer):
-    """Кратка инфа для списка покупок."""
+    """Краткая инфа о рецепте."""
     class Meta:
         model = Recipe
         fields = ('id', 'name', 'image', 'cooking_time')
@@ -210,3 +210,27 @@ class PurchaseSerializer(serializers.ModelSerializer):
         return RecipeShortInfo(
             instance.recipe,
             context=context).data
+
+
+class FavoriteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Favorite
+        fields = ('user', 'recipe')
+
+    def validate(self, data):
+        request = self.context.get('request')
+        if not request or request.user.is_anonymous:
+            return False
+        recipe = data['recipe']
+        if Favorite.objects.filter(user=request.user, recipe=recipe).exists():
+            raise serializers.ValidationError({
+                'errors': 'Уже есть в избранном.'
+            })
+        return data
+
+    def to_representation(self, instance):
+        request = self.context.get('request')
+        context = {'request': request}
+        return RecipeShortInfo(
+            instance.recipe, context=context).data
+
