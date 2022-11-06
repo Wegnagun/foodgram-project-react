@@ -176,7 +176,7 @@ class Favorite(models.Model):
 
 
 class Purchase(models.Model):
-    """ Модель покупок. """
+    """ Модель списка покупок. """
     user = models.ForeignKey(
         CustomUser,
         on_delete=models.CASCADE,
@@ -193,9 +193,7 @@ class Purchase(models.Model):
     )
 
     class Meta:
-        ordering = ('-date_added',)
-        verbose_name = 'Покупка'
-        verbose_name_plural = 'Покупки'
+        verbose_name = 'Список покупок'
         constraints = [
             models.UniqueConstraint(
                 fields=['user', 'recipe'], name='purchase_user_recipe_unique'
