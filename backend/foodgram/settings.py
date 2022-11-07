@@ -7,12 +7,14 @@ load_dotenv()
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = os.getenv('KEY')
 
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 ALLOWED_ORIGINS = ['http://*', 'https://*']  # добавить сюда айпи на будущее!
 CSRF_TRUSTED_ORIGINS = ALLOWED_ORIGINS.copy()
+CSRF_COOKIE_HTTPONLY = True
 SESSION_COOKIE_SECURE = True
+
 
 INSTALLED_APPS = [
     'django.contrib.admin',
