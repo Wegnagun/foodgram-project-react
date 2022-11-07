@@ -44,6 +44,5 @@ typing==3.7.4.3
 tzdata==2022.5
 uritemplate==4.1.1
 urllib3==1.26.12
-weasyprint==57.1
 webencodings==0.5.1
 zopfli==0.2.1

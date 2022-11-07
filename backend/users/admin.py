@@ -6,7 +6,7 @@ from .models import CustomUser
 class BaseAdminSettings(admin.ModelAdmin):
     """Базовая кастомизация админ панели."""
     empty_value_display = '-пусто-'
-    list_filter = ('email', 'username')  # добавить таги потом
+    list_filter = ('email', 'username')
 
 
 class CustomUserAdmin(BaseAdminSettings):

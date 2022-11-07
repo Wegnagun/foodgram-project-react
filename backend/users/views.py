@@ -15,8 +15,6 @@ from recipes.serializers import FollowSerializer, FollowListSerializer
 class UsersViewSet(viewsets.ModelViewSet):
     """Контроллер пользователей."""
     pagination_class = CustomPagination
-    # queryset = CustomUser.objects.all()
-    serializer_class = CustomUserSerializer
     lookup_field = 'pk'
     search_fields = ('username',)
 
