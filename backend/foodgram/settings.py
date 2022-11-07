@@ -7,14 +7,20 @@ load_dotenv()
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = os.getenv('KEY')
 
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ['*']
-ALLOWED_ORIGINS = ['http://*', 'https://*']  # добавить сюда айпи на будущее!
+ALLOWED_HOSTS = [
+    'localhost', '127.0.0.1', 'backend',
+    'http://51.250.94.252', 'https://51.250.94.252'
+]
+
+ALLOWED_ORIGINS = [
+    'http://localhost', 'http://backend',
+    'https://127.0.0.1', 'https://backend',
+    'http://51.250.94.252', 'https://51.250.94.252'
+]
+
 CSRF_TRUSTED_ORIGINS = ALLOWED_ORIGINS.copy()
-CSRF_COOKIE_HTTPONLY = True
-SESSION_COOKIE_SECURE = True
-
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -62,7 +68,6 @@ TEMPLATES = [
 WSGI_APPLICATION = 'foodgram.wsgi.application'
 
 
-# Database
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',

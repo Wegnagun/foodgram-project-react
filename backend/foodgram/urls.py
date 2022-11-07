@@ -11,9 +11,9 @@ admin.site.index_title = 'Разделы админки Foodgram'
 admin.site.site_title = 'Админка сайта Foodgram'
 
 router = routers.DefaultRouter()
+router.register('users', UsersViewSet, basename='users')
 router.register('recipes', RecipesViewSet, basename='recipes')
 router.register('ingredients', IngredientViewSet, basename='ingredients')
-router.register('users', UsersViewSet, basename='users')
 router.register('tags', TagViewSet, basename='tags')
 
 urlpatterns = [
