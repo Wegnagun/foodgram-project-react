@@ -4,12 +4,12 @@ from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
+from recipes.serializers import FollowSerializer, FollowListSerializer
 from .models import CustomUser, Follow
 from .pagination import CustomPagination
 from .serializers import (
     CustomUserSerializer, PasswordSerializer
 )
-from recipes.serializers import FollowSerializer, FollowListSerializer
 
 
 class UsersViewSet(viewsets.ModelViewSet):

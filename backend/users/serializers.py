@@ -52,7 +52,7 @@ class PasswordSerializer(serializers.ModelSerializer):
     def validate_old_password(self, value):
         user = self.context['user']
         if not user.check_password(value):
-            raise serializers.ValidationError('Неправильный текущий пароль!')   #не пашет почему-то((((
+            raise serializers.ValidationError('Неправильный текущий пароль!')
         return value
 
     def validate(self, data):

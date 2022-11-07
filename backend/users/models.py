@@ -1,6 +1,7 @@
 from django.contrib.auth.models import AbstractUser, PermissionsMixin
 from django.contrib.auth.validators import UnicodeUsernameValidator
 from django.db import models
+
 from .managers import CustomUserManager
 
 

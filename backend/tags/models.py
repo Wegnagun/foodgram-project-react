@@ -1,6 +1,6 @@
-from django.db import models
 from colorfield.fields import ColorField
 from django.core.validators import validate_slug
+from django.db import models
 
 
 class Tag(models.Model):

@@ -1,5 +1,6 @@
-from dotenv import load_dotenv
 import os
+
+from dotenv import load_dotenv
 
 load_dotenv()
 
@@ -8,8 +9,9 @@ SECRET_KEY = os.getenv('KEY')
 
 DEBUG = False
 
-ALLOWED_HOSTS = ['*']
-CSRF_TRUSTED_ORIGINS = ["https://localhost"]  # добавить сюда айпи на будущее!
+# ALLOWED_HOSTS = ['*']
+ALLOWED_ORIGINS = ['http://*', 'https://*']  # добавить сюда айпи на будущее!
+CSRF_TRUSTED_ORIGINS = ALLOWED_ORIGINS.copy()
 
 INSTALLED_APPS = [
     'django.contrib.admin',
