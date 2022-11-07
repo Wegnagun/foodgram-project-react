@@ -1,11 +1,13 @@
-#### praktikum_new_diplom  
-# Foodgram - «Продуктовый помощник» 
+#### praktikum Диплом  
+# Foodgram - «Продуктовый помощник»  
 
-мои настройки на винде пайтон 3.9 (пробую 3.11)  
-дома пайтон 3.10.7  
+---------------
+## Автор  
+[Александр Фокин](https://github.com/Wegnagun)
 
-чтобы добраться до редока надо:  
-`sudo docker-compose up`  
+--------------- 
+### Стек технологий:  
+Python 3.11, Django 4.1.2, DRF 3.14.0, gunicorn 20.1.0, djoser 2.1.0
 
 ### Установка: 
 #### Windows
@@ -28,22 +30,16 @@
 
 `pip install -r requirements.txt `
 
-Регистрация нового пользователя:
-```
-POST /api/v1/auth/signup/
+--------------- 
 
-{
-  "email": "string",
-  "username": "string"
-}
-```
+#### Ресурсы проекта:
 
-Получение JWT-токена:
-```
-POST api/auth/token/login/
-
-{
-  "email": "string",
-  "password": "string"
-}
-```
+.../api/users/ - эндпоинт пользователей;  
+.../api/recipes/ - эндпоинт рецептов;  
+.../api/ingredients/ - эндпоинт ингредиентов;  
+.../api/tags/ - эндпоинт тэгов;  
+.../api/ingredients/ - эндпоинт рецептов;  
+.../admin/ - эндпоинт админки сайта;  
+.../api/auth/ - действия с djoser авторизацией;  
+---------------   
+.../api/docs/redoc.html  подробная документация с примерами запросов и ответов
