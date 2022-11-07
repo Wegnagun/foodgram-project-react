@@ -17,14 +17,19 @@ class RecipesAdmin(BaseAdminSettings):
     list_display = (
         'name',
         'author',
+        'count_add_favorite'
     )
     search_fields = ('name',)
-    list_filter = ('author', 'name', 'tags', 'ingredients')
+    list_filter = ('author', 'name', 'tags')
     list_display_links = ('name',)
     filter_horizontal = ('tags', 'ingredients')
     inlines = [
         RecipeIngredientAdmin,
     ]
+
+    @admin.display(empty_value='0', description='Добавлений в избранное')
+    def count_add_favorite(self, obj):
+        return obj.favorites.count()
 
 
 class IngredientAdmin(BaseAdminSettings):

@@ -9,6 +9,7 @@ SECRET_KEY = os.getenv('KEY')
 DEBUG = False
 
 ALLOWED_HOSTS = ['*']
+CSRF_TRUSTED_ORIGINS = ["https://localhost"]  # добавить сюда айпи на будущее!
 
 INSTALLED_APPS = [
     'django.contrib.admin',
