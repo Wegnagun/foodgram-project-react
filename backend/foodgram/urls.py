@@ -4,6 +4,7 @@ from rest_framework import routers
 
 from recipes.views import RecipesViewSet, IngredientViewSet
 from users.views import UsersViewSet
+from tags.views import TagViewSet
 
 admin.site.site_header = 'Foodgram'
 admin.site.index_title = 'Разделы админки Foodgram'
@@ -13,11 +14,10 @@ router = routers.DefaultRouter()
 router.register('recipes', RecipesViewSet, basename='recipes')
 router.register('ingredients', IngredientViewSet, basename='ingredients')
 router.register('users', UsersViewSet, basename='users')
+router.register('tags', TagViewSet, basename='tags')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include(router.urls)),
-    path('api/', include('djoser.urls')),
-    path('api/', include('tags.urls')),
-    path('auth/', include('djoser.urls.authtoken')),
+    path('api/auth/', include('djoser.urls.authtoken')),
 ]
