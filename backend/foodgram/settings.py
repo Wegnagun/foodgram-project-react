@@ -10,8 +10,7 @@ SECRET_KEY = os.getenv('KEY')
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    'localhost', '127.0.0.1', 'backend',
-    'http://51.250.94.252', 'https://51.250.94.252'
+    'localhost', '127.0.0.1', 'backend', '51.250.94.252'
 ]
 
 ALLOWED_ORIGINS = [
