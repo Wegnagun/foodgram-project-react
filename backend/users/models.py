@@ -1,11 +1,11 @@
-from django.contrib.auth.models import AbstractUser, PermissionsMixin
+from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.validators import UnicodeUsernameValidator
 from django.db import models
 
-from .managers import CustomUserManager
+from .managers import UserManager
 
 
-class CustomUser(AbstractUser, PermissionsMixin):
+class User(AbstractUser):
     """Модель пользователей."""
     username_validator = UnicodeUsernameValidator()
 
@@ -43,7 +43,7 @@ class CustomUser(AbstractUser, PermissionsMixin):
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username', 'first_name', 'last_name', 'password']
-    objects = CustomUserManager()
+    objects = UserManager()
 
     class Meta:
         ordering = ('-pk',)
@@ -79,13 +79,13 @@ class CustomUser(AbstractUser, PermissionsMixin):
 class Follow(models.Model):
     """ Модель подписок. """
     user = models.ForeignKey(
-        CustomUser,
+        User,
         on_delete=models.CASCADE,
         verbose_name="Пользователь - кто подписан",
         related_name="follower"
     )
     author = models.ForeignKey(
-        CustomUser,
+        User,
         on_delete=models.CASCADE,
         verbose_name="Пользователь - на кого подписан",
         related_name="following"

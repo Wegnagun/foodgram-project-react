@@ -1,4 +1,5 @@
 import os
+
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -8,9 +9,11 @@ SECRET_KEY = os.environ.get('KEY', 'enter you Secret key')
 
 DEBUG = os.environ.get('DBG', 'False')
 
-ALLOWED_HOSTS = os.environ.get('HOSTS', ['127.0.0.1'])
-ALLOWED_ORIGINS = os.environ.get('ORIGINS', ['http://127.0.0.1'])
-CSRF_TRUSTED_ORIGINS = os.environ.get('ORIGINS', ['http://127.0.0.1'])
+ALLOWED_HOSTS = os.environ.get('HOSTS', ['127.0.0.1']).split(',')
+ALLOWED_ORIGINS = os.environ.get('ORIGINS', ['http://127.0.0.1']).split(',')
+CSRF_TRUSTED_ORIGINS = os.environ.get(
+    'ORIGINS', ['http://127.0.0.1']
+).split(',')
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -113,8 +116,8 @@ REST_FRAMEWORK = {
 DJOSER = {
     'HIDE_USERS': False,
     'SERIALIZERS': {
-        'user': 'users.serializers.CustomUserSerializer',
-        'current_user': 'users.serializers.CustomUserSerializer',
+        'user': 'users.serializers.UserSerializer',
+        'current_user': 'users.serializers.UserSerializer',
     },
     'PERMISSIONS': {
         'user_list': ['rest_framework.permissions.AllowAny'],
@@ -129,4 +132,4 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-AUTH_USER_MODEL = 'users.CustomUser'
+AUTH_USER_MODEL = 'users.User'

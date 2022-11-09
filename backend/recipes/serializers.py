@@ -4,8 +4,8 @@ from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers
 
 from tags.serializers import TagSerializer
-from users.models import Follow, CustomUser
-from users.serializers import CustomUserSerializer
+from users.models import Follow, User
+from users.serializers import UserSerializer
 from .models import (
     Recipe, Ingredient, IngredientInRecipe, Favorite, Purchase, Tag
 )
@@ -47,7 +47,7 @@ class IngredientInRecipeSerializer(serializers.ModelSerializer):
 class RecipesSerializer(serializers.ModelSerializer):
     """Сериализатор модели рецептов."""
     tags = TagSerializer(many=True, read_only=True)
-    author = CustomUserSerializer(read_only=True)
+    author = UserSerializer(read_only=True)
     ingredients = IngredientInRecipeSerializer(
         many=True,
         read_only=True,
@@ -109,7 +109,7 @@ class AddIngredientSerializer(serializers.ModelSerializer):
 class RecipeCreateSerializer(serializers.ModelSerializer):
     """Сериализатор создания рецепта."""
     image = Base64ImageField(use_url=True, max_length=None)
-    author = CustomUserSerializer(read_only=True)
+    author = UserSerializer(read_only=True)
     ingredients = AddIngredientSerializer(many=True)
     tags = serializers.PrimaryKeyRelatedField(
         queryset=Tag.objects.all(), many=True
@@ -244,7 +244,7 @@ class FollowListSerializer(serializers.ModelSerializer):
     is_subscribed = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
-        model = CustomUser
+        model = User
         fields = (
             'email', 'id', 'username', 'first_name', 'last_name',
             'is_subscribed', 'recipes', 'recipes_count'
@@ -280,7 +280,7 @@ class FollowSerializer(serializers.ModelSerializer):
         fields = ('user', 'author')
 
     def validate(self, data):
-        get_object_or_404(CustomUser, username=data['author'])
+        get_object_or_404(User, username=data['author'])
         if self.context['request'].user == data['author']:
             raise serializers.ValidationError({
                 'errors': 'Ты не пожешь подписаться на себя.'

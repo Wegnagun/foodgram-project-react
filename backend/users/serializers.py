@@ -1,20 +1,20 @@
 from django.contrib.auth.password_validation import validate_password
 from rest_framework import serializers
 
-from .models import CustomUser, Follow
+from .models import User, Follow
 
 
-class CustomUserSerializer(serializers.ModelSerializer):
+class UserSerializer(serializers.ModelSerializer):
     """Сериализатор модели пользователей."""
     is_subscribed = serializers.SerializerMethodField()
 
     class Meta:
-        model = CustomUser
+        model = User
         fields = ('email', 'id', 'username', 'first_name', 'last_name',
                   'password', 'is_subscribed')
         extra_kwargs = {'is_subscribed': {'required': False}}
 
-    def get_is_subscribed(self, obj: CustomUser):
+    def get_is_subscribed(self, obj: User):
         request = self.context.get('request')
         if not request or request.user.is_anonymous:
             return False
@@ -23,7 +23,7 @@ class CustomUserSerializer(serializers.ModelSerializer):
 
     def to_representation(self, obj):
         """ Возвращаем результаты работы сериализатора."""
-        result = super(CustomUserSerializer, self).to_representation(obj)
+        result = super(UserSerializer, self).to_representation(obj)
         result.pop('password', None)
         result.pop('is_superuser', None)
         return result
@@ -33,7 +33,7 @@ class UserDetailSerializer(serializers.ModelSerializer):
     """Сериализатор профиля пользователя."""
 
     class Meta:
-        model = CustomUser
+        model = User
         fields = ('email', 'id', 'username', 'first_name', 'last_name',
                   'password', 'is_subscribed',)
         read_only_fields = ('is_superuser',)
@@ -46,7 +46,7 @@ class PasswordSerializer(serializers.ModelSerializer):
     current_password = serializers.CharField(required=True, write_only=True)
 
     class Meta:
-        model = CustomUser
+        model = User
         fields = ['current_password', 'new_password']
 
     def validate_old_password(self, value):
@@ -76,7 +76,7 @@ class UsersListSerializer(serializers.ModelSerializer):
     is_subscribed = serializers.SerializerMethodField()
 
     class Meta:
-        model = CustomUser
+        model = User
         fields = (
             "email", "id", "username", "first_name", "last_name",
             "is_subscribed"

@@ -5,18 +5,18 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from recipes.serializers import FollowSerializer, FollowListSerializer
-from .models import CustomUser, Follow
+from .models import User, Follow
 from .pagination import CustomPagination
 from .serializers import (
-    CustomUserSerializer, PasswordSerializer
+    UserSerializer, PasswordSerializer
 )
 
 
 class UsersViewSet(viewsets.ModelViewSet):
     """Контроллер пользователей."""
     pagination_class = CustomPagination
-    queryset = CustomUser.objects.all()
-    serializer_class = CustomUserSerializer
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
     lookup_field = 'pk'
     search_fields = ('username',)
 
@@ -25,7 +25,7 @@ class UsersViewSet(viewsets.ModelViewSet):
         url_path='me', permission_classes=(IsAuthenticated,)
     )
     def about_me(self, request):
-        serializer = CustomUserSerializer(
+        serializer = UserSerializer(
             request.user, data=request.data, partial=True
         )
         serializer.is_valid(raise_exception=True)
@@ -36,7 +36,7 @@ class UsersViewSet(viewsets.ModelViewSet):
             permission_classes=(IsAuthenticated,))
     def set_password(self, request):
         pk = self.request.user.id
-        user = CustomUser.objects.get(pk=pk)
+        user = User.objects.get(pk=pk)
         serializer = PasswordSerializer(
             request.user, data=request.data, partial=True,
             context={"user": user}
@@ -54,7 +54,7 @@ class UsersViewSet(viewsets.ModelViewSet):
         if request.method != 'POST':
             subscription = get_object_or_404(
                 Follow,
-                author=get_object_or_404(CustomUser, id=pk),
+                author=get_object_or_404(User, id=pk),
                 user=request.user
             )
             self.perform_destroy(subscription)
@@ -62,7 +62,7 @@ class UsersViewSet(viewsets.ModelViewSet):
         serializer = FollowSerializer(
             data={
                 'user': request.user.id,
-                'author': get_object_or_404(CustomUser, id=pk).id
+                'author': get_object_or_404(User, id=pk).id
             },
             context={'request': request}
         )
@@ -76,7 +76,7 @@ class UsersViewSet(viewsets.ModelViewSet):
     )
     def subscriptions(self, request):
         subscriptions_list = self.paginate_queryset(
-            CustomUser.objects.filter(following__user=request.user)
+            User.objects.filter(following__user=request.user)
         )
         serializer = FollowListSerializer(
             subscriptions_list, many=True, context={

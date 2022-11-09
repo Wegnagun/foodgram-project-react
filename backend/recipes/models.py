@@ -2,7 +2,7 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 
 from tags.models import Tag
-from users.models import CustomUser
+from users.models import User
 
 
 class Ingredient(models.Model):
@@ -49,7 +49,7 @@ class Recipe(models.Model):
         related_name="recipes",
     )
     author = models.ForeignKey(
-        CustomUser,
+        User,
         on_delete=models.CASCADE,
         verbose_name='Автор рецепта',
         related_name="recipes"
@@ -133,7 +133,7 @@ class IngredientInRecipe(models.Model):
 class Favorite(models.Model):
     """ Модель избранного. """
     user = models.ForeignKey(
-        CustomUser,
+        User,
         on_delete=models.CASCADE,
         related_name='favorites',
     )
@@ -164,7 +164,7 @@ class Favorite(models.Model):
 class Purchase(models.Model):
     """ Модель списка покупок. """
     user = models.ForeignKey(
-        CustomUser,
+        User,
         on_delete=models.CASCADE,
         related_name='purchases',
     )

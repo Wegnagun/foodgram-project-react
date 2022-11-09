@@ -59,13 +59,13 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CustomUserCreate'
+              $ref: '#/components/schemas/UserCreate'
       responses:
         '201':
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CustomUserResponseOnCreate'
+                $ref: '#/components/schemas/UserResponseOnCreate'
           description: 'Пользователь успешно создан'
         '400':
           $ref: '#/components/responses/ValidationError'
@@ -905,7 +905,7 @@ components:
       required:
         - name
         - measurement_unit
-    CustomUserCreate:
+    UserCreate:
       type: object
       properties:
         email:
@@ -944,7 +944,7 @@ components:
         - first_name
         - last_name
         - email
-    CustomUserResponseOnCreate:
+    UserResponseOnCreate:
       type: object
       properties:
         email:

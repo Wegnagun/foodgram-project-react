@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import CustomUser
+from .models import User
 
 
 class BaseAdminSettings(admin.ModelAdmin):
@@ -9,7 +9,7 @@ class BaseAdminSettings(admin.ModelAdmin):
     list_filter = ('email', 'username')
 
 
-class CustomUserAdmin(BaseAdminSettings):
+class UserAdmin(BaseAdminSettings):
     """Отображаемые поля админки раздела пользователи."""
     list_display = (
         'id',
@@ -23,4 +23,4 @@ class CustomUserAdmin(BaseAdminSettings):
     search_fields = ('role', 'username')
 
 
-admin.site.register(CustomUser, CustomUserAdmin)
+admin.site.register(User, UserAdmin)
