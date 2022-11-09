@@ -5,7 +5,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from recipes.serializers import FollowSerializer, FollowListSerializer
-from .models import User, Follow
+from .models import User
 from .pagination import CustomPagination
 from .serializers import UserSerializer
 
@@ -39,9 +39,10 @@ class UsersViewSet(viewsets.ModelViewSet):
         if serializer.is_valid(raise_exception=True):
             User.follow_for(user, author)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(status=status.HTTP_400_BAD_REQUEST)
 
     @action(
-        detail=True,
+        detail=False,
         permission_classes=(IsAuthenticated,),
     )
     def subscriptions(self, request):
