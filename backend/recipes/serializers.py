@@ -283,7 +283,7 @@ class FollowSerializer(serializers.ModelSerializer):
         get_object_or_404(User, username=data['author'])
         if self.context['request'].user == data['author']:
             raise serializers.ValidationError({
-                'errors': 'Ты не пожешь подписаться на себя.'
+                'errors': 'Ты не можешь подписаться на себя.'
             })
         if Follow.objects.filter(
                 user=self.context['request'].user,
@@ -294,8 +294,8 @@ class FollowSerializer(serializers.ModelSerializer):
             })
         return data
 
-    def to_representation(self, instance):
+    def to_representation(self, data):
         return FollowListSerializer(
-            instance.author,
+            data['author'],
             context={'request': self.context.get('request')}
         ).data

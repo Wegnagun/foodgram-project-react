@@ -7,9 +7,7 @@ from rest_framework.response import Response
 from recipes.serializers import FollowSerializer, FollowListSerializer
 from .models import User, Follow
 from .pagination import CustomPagination
-from .serializers import (
-    UserSerializer, PasswordSerializer
-)
+from .serializers import UserSerializer
 
 
 class UsersViewSet(viewsets.ModelViewSet):
@@ -21,43 +19,15 @@ class UsersViewSet(viewsets.ModelViewSet):
     search_fields = ('username',)
 
     @action(
-        detail=False, methods=['get'],
-        url_path='me', permission_classes=(IsAuthenticated,)
-    )
-    def about_me(self, request):
-        serializer = UserSerializer(
-            request.user, data=request.data, partial=True
-        )
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
-    @action(detail=False, methods=["post"], url_path='set_password',
-            permission_classes=(IsAuthenticated,))
-    def set_password(self, request):
-        pk = self.request.user.id
-        user = User.objects.get(pk=pk)
-        serializer = PasswordSerializer(
-            request.user, data=request.data, partial=True,
-            context={"user": user}
-        )
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data, status=status.HTTP_204_NO_CONTENT)
-
-    @action(
         methods=['post', 'delete'],
         detail=True,
         permission_classes=(IsAuthenticated,)
     )
     def subscribe(self, request, pk):
+        user = request.user
+        author = get_object_or_404(User, id=pk)
         if request.method != 'POST':
-            subscription = get_object_or_404(
-                Follow,
-                author=get_object_or_404(User, id=pk),
-                user=request.user
-            )
-            self.perform_destroy(subscription)
+            User.unfollow(user, author)
             return Response(status=status.HTTP_204_NO_CONTENT)
         serializer = FollowSerializer(
             data={
@@ -66,13 +36,13 @@ class UsersViewSet(viewsets.ModelViewSet):
             },
             context={'request': request}
         )
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+        if serializer.is_valid(raise_exception=True):
+            User.follow_for(user, author)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     @action(
-        detail=False,
-        permission_classes=(IsAuthenticated,)
+        detail=True,
+        permission_classes=(IsAuthenticated,),
     )
     def subscriptions(self, request):
         subscriptions_list = self.paginate_queryset(
