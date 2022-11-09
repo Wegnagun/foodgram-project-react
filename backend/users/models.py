@@ -3,16 +3,28 @@ from django.contrib.auth.validators import UnicodeUsernameValidator
 from django.db import models
 
 from .managers import UserManager
+from .validators import validate_not_me_name
+
+
+class UserRole:
+    USER = 'user'
+    ADMIN = 'admin'
+    choices = [
+        (USER, 'USER'),
+        (ADMIN, 'ADMIN')
+    ]
 
 
 class User(AbstractUser):
     """Модель пользователей."""
     username_validator = UnicodeUsernameValidator()
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['username', 'first_name', 'last_name', 'password']
 
     username = models.CharField(
         max_length=150,
         unique=True,
-        validators=[username_validator],
+        validators=[username_validator, validate_not_me_name],
         verbose_name='Имя пользователя',
         help_text=(
             "Обязательно. 150 символов или меньше. "
@@ -38,11 +50,17 @@ class User(AbstractUser):
         max_length=150,
         verbose_name='Фамилия',
     )
-    is_superuser = models.BooleanField('Администратор', default=False)
+    role = models.TextField(
+        choices=UserRole.choices,
+        default=UserRole.USER,
+        verbose_name='Роль пользователя'
+    )
     is_blocked = models.BooleanField('Заблокирован', default=False)
+    follow = models.ManyToManyField(
+        'self', through='Follow', symmetrical=False,
+        through_fields=('user', 'author')
+    )
 
-    USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['username', 'first_name', 'last_name', 'password']
     objects = UserManager()
 
     class Meta:
@@ -51,16 +69,14 @@ class User(AbstractUser):
         verbose_name_plural = 'Пользователи'
 
     @property
-    def is_staff(self):
-        return self.is_superuser
+    def is_admin(self):
+        return self.role == UserRole.ADMIN or self.is_superuser
 
-    def is_following(self, obj):
-        return Follow.objects.filter(
-            user=self,
-            author=obj
-        ).exists()
+    @property
+    def is_user(self):
+        return self.role == UserRole.USER
 
-    def follow(self, obj):
+    def follow_for(self, obj):
         Follow.objects.get_or_create(
             user=self,
             author=obj
@@ -97,6 +113,10 @@ class Follow(models.Model):
             models.UniqueConstraint(
                 fields=["author", "user"],
                 name="Follow_unique"
+            ),
+            models.CheckConstraint(
+                check=~models.Q(user=models.F('author')),
+                name='self_following',
             ),
         ]
 

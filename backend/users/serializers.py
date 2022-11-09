@@ -1,7 +1,7 @@
 from django.contrib.auth.password_validation import validate_password
 from rest_framework import serializers
 
-from .models import User, Follow
+from .models import User
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -11,22 +11,18 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ('email', 'id', 'username', 'first_name', 'last_name',
-                  'password', 'is_subscribed')
+                  'is_subscribed')
         extra_kwargs = {'is_subscribed': {'required': False}}
 
     def get_is_subscribed(self, obj: User):
-        request = self.context.get('request')
-        if not request or request.user.is_anonymous:
-            return False
-        return Follow.objects.filter(
-            user=request.user, author=obj).exists()
-
-    def to_representation(self, obj):
-        """ Возвращаем результаты работы сериализатора."""
-        result = super(UserSerializer, self).to_representation(obj)
-        result.pop('password', None)
-        result.pop('is_superuser', None)
-        return result
+        request = self.context.get("request")
+        if (
+            request
+            and hasattr(request, "user")
+            and request.user.is_authenticated
+        ):
+            return request.user.follower.filter(author=obj).exists()
+        return False
 
 
 class UserDetailSerializer(serializers.ModelSerializer):

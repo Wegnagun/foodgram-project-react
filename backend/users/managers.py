@@ -21,4 +21,6 @@ class UserManager(BaseUserManager):
             raise ValueError(
                 'Суперпользователь должен иметь is_superuser=True!'
             )
-        return self.create_user(email, username, password, **extra_fields)
+        return self.create_user(
+            email, username, password,
+            role='admin', is_staff=True, **extra_fields)
