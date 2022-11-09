@@ -1,11 +1,8 @@
-from django.contrib.auth import get_user_model
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 
 from tags.models import Tag
 from users.models import CustomUser
-
-User = get_user_model()
 
 
 class Ingredient(models.Model):
@@ -13,9 +10,6 @@ class Ingredient(models.Model):
         max_length=250,
         verbose_name='Наименование ингредиента',
         db_index=True,
-        error_messages={
-            "unique": "Такой ингридиент уже есть.",
-        },
     )
     measurement_unit = models.CharField(
         max_length=200,
@@ -29,14 +23,6 @@ class Ingredient(models.Model):
 
     def __str__(self):
         return f'{self.name}/{self.measurement_unit}'
-
-
-def get_sentinel_user():
-    return User.objects.get_or_create(
-        username='deleted_usr',
-        first_name='deleted',
-        last_name='user'
-    )[0]
 
 
 class Recipe(models.Model):
@@ -64,7 +50,7 @@ class Recipe(models.Model):
     )
     author = models.ForeignKey(
         CustomUser,
-        on_delete=models.SET(get_sentinel_user),
+        on_delete=models.CASCADE,
         verbose_name='Автор рецепта',
         related_name="recipes"
     )
@@ -194,6 +180,7 @@ class Purchase(models.Model):
 
     class Meta:
         verbose_name = 'Список покупок'
+        verbose_name_plural = 'Список покупок'
         constraints = [
             models.UniqueConstraint(
                 fields=['user', 'recipe'], name='purchase_user_recipe_unique'

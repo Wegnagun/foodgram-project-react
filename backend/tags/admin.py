@@ -9,6 +9,7 @@ class TagsAdmin(BaseAdminSettings):
     list_display = (
         'name',
         'color',
+        'colored',
         'slug'
     )
     search_fields = ('name',)

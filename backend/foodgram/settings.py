@@ -1,25 +1,16 @@
 import os
-
 from dotenv import load_dotenv
 
 load_dotenv()
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-SECRET_KEY = os.getenv('KEY')
+SECRET_KEY = os.environ.get('KEY', 'enter you Secret key')
 
-DEBUG = True
+DEBUG = os.environ.get('DBG', 'False')
 
-ALLOWED_HOSTS = [
-    'localhost', '127.0.0.1', 'backend', '51.250.94.252'
-]
-
-ALLOWED_ORIGINS = [
-    'http://localhost', 'http://backend',
-    'https://127.0.0.1', 'https://backend',
-    'http://51.250.94.252', 'https://51.250.94.252'
-]
-
-CSRF_TRUSTED_ORIGINS = ALLOWED_ORIGINS.copy()
+ALLOWED_HOSTS = os.environ.get('HOSTS', ['127.0.0.1'])
+ALLOWED_ORIGINS = os.environ.get('ORIGINS', ['http://127.0.0.1'])
+CSRF_TRUSTED_ORIGINS = os.environ.get('ORIGINS', ['http://127.0.0.1'])
 
 INSTALLED_APPS = [
     'django.contrib.admin',
