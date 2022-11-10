@@ -18,6 +18,10 @@ router.register('tags', TagViewSet, basename='tags')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path(
+        'api/users/subscriptions/',
+        UsersViewSet.as_view({"get": "subscriptions"})
+    ),
     path('api/', include('users.urls')),
     path('api/', include('djoser.urls')),
     path('api/', include(router.urls)),

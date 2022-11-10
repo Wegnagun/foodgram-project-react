@@ -238,7 +238,7 @@ class FavoriteSerializer(serializers.ModelSerializer):
 
 
 class FollowListSerializer(serializers.ModelSerializer):
-    """Сериализатор подписок."""
+    """Сериализатор списка подписок."""
     recipes = serializers.SerializerMethodField()
     recipes_count = serializers.SerializerMethodField()
     is_subscribed = serializers.SerializerMethodField(read_only=True)
