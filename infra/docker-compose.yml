@@ -20,11 +20,17 @@ services:
       - ../infra/.env  #  ../backend/.env
 
   frontend:
-    build:
-      context: ../frontend
-      dockerfile: Dockerfile
+    image: wegnagun/foodgram-front:latest
     volumes:
       - ../frontend/:/app/result_build/
+    depends_on:
+      - backend
+#  frontend:
+#    build:
+#      context: ../frontend
+#      dockerfile: Dockerfile
+#    volumes:
+#      - ../frontend/:/app/result_build/
 
   nginx:
     image: nginx:1.19.3
