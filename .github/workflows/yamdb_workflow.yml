@@ -61,7 +61,7 @@ jobs:
             sudo docker-compose stop
             sudo docker-compose rm web
             sudo docker pull ${{ secrets.USER }}/foodgram:latest
-            cd backend/
+            cd backend  # тест
             rm .env
             touch .env
             echo KEY=${{ secrets.KEY }} >> .env
@@ -74,6 +74,7 @@ jobs:
             echo DBG=${{ secrets.DBG }} >> .env
             echo HOSTS=${{ secrets.HOSTS }} >> .env
             echo ORIGINS=${{ secrets.ORIGINS }} >> .env
+            cd .. # тест
             sudo docker-compose up -d
   send_message:
     runs-on: ubuntu-latest
