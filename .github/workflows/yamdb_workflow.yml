@@ -45,7 +45,7 @@ jobs:
           tags: ${{ secrets.DOCKER_USERNAME }}/foodgram:latest
 
   deploy:
-      if: ${{ github.ref }} == 'master' # обновление git add --all
+      if: ${{ github.ref }} == 'master' # обновление! git add --all
       runs-on: ubuntu-latest
       needs: build_and_push_to_docker_hub
       steps:
