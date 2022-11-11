@@ -1,5 +1,4 @@
 from django.db.transaction import atomic
-from django.shortcuts import get_object_or_404
 from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers
 
@@ -235,18 +234,15 @@ class FavoriteSerializer(serializers.ModelSerializer):
             instance.recipe, context=context).data
 
 
-class FollowListSerializer(serializers.ModelSerializer):
-    """Сериализатор списка подписок."""
+class SubscribeSerializer(UserSerializer):
+    """ Сериализатор подписок. """
     recipes = serializers.SerializerMethodField()
     recipes_count = serializers.SerializerMethodField()
     is_subscribed = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = User
-        fields = (
-            'email', 'id', 'username', 'first_name', 'last_name',
-            'is_subscribed', 'recipes', 'recipes_count'
-        )
+        fields = UserSerializer.Meta.fields + ('recipes', 'recipes_count', 'is_subscribed')
 
     def get_recipes_count(self, author):
         return Recipe.objects.filter(author=author).count()
@@ -270,30 +266,3 @@ class FollowListSerializer(serializers.ModelSerializer):
             user=self.context.get('request').user,
             author=author
         ).exists()
-
-
-class FollowSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Follow
-        fields = ('user', 'author')
-
-    def validate(self, data):
-        get_object_or_404(User, username=data['author'])
-        if self.context['request'].user == data['author']:
-            raise serializers.ValidationError({
-                'errors': 'Ты не можешь подписаться на себя.'
-            })
-        if Follow.objects.filter(
-                user=self.context['request'].user,
-                author=data['author']
-        ):
-            raise serializers.ValidationError({
-                'errors': 'Уже подписан.'
-            })
-        return data
-
-    def to_representation(self, data):
-        return FollowListSerializer(
-            data['author'],
-            context={'request': self.context.get('request')}
-        ).data
