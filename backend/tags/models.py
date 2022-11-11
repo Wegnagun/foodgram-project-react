@@ -2,7 +2,8 @@ from colorfield.fields import ColorField
 from django.contrib import admin
 from django.core.validators import validate_slug
 from django.db import models
-from django.utils.html import format_html
+
+from .validators import HexColorValidator
 
 
 class Tag(models.Model):
@@ -21,6 +22,7 @@ class Tag(models.Model):
         format='hex',
         verbose_name='HEX-код цвета',
         max_length=7,
+        validators=[HexColorValidator]
     )
     slug = models.SlugField(
         max_length=200,
@@ -36,14 +38,6 @@ class Tag(models.Model):
     class Meta:
         verbose_name = 'Тэг'
         verbose_name_plural = 'Тэги'
-
-    @admin.display
-    def colored(self):
-        return format_html(
-            f'<span style="background: {self.color};'
-            f'color: {self.color}";>___________</span>'
-        )
-    colored.short_description = 'цвет'
 
     def __str__(self):
         return self.name

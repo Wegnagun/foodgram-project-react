@@ -29,7 +29,9 @@ class RecipesAdmin(BaseAdminSettings):
 
     @admin.display(empty_value='0', description='Добавлений в избранное')
     def count_add_favorite(self, obj):
-        return obj.favorites.count()
+        return Favorite.objects.filter(recipe=obj).count()
+
+    count_add_favorite.short_description = 'Сколько раз в избранном'
 
 
 class IngredientAdmin(BaseAdminSettings):

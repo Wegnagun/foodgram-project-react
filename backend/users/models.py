@@ -6,15 +6,6 @@ from .managers import UserManager
 from .validators import validate_not_me_name
 
 
-class UserRole:
-    USER = 'user'
-    ADMIN = 'admin'
-    choices = [
-        (USER, 'USER'),
-        (ADMIN, 'ADMIN')
-    ]
-
-
 class User(AbstractUser):
     """Модель пользователей."""
     username_validator = UnicodeUsernameValidator()
@@ -50,13 +41,8 @@ class User(AbstractUser):
         max_length=150,
         verbose_name='Фамилия',
     )
-    role = models.TextField(
-        choices=UserRole.choices,
-        default=UserRole.USER,
-        verbose_name='Роль пользователя'
-    )
     is_blocked = models.BooleanField('Заблокирован', default=False)
-    follow = models.ManyToManyField(
+    subscribe = models.ManyToManyField(
         'self', through='Follow', symmetrical=False,
         through_fields=('user', 'author')
     )
@@ -67,14 +53,6 @@ class User(AbstractUser):
         ordering = ('-pk',)
         verbose_name = 'Пользователь'
         verbose_name_plural = 'Пользователи'
-
-    @property
-    def is_admin(self):
-        return self.role == UserRole.ADMIN or self.is_superuser
-
-    @property
-    def is_user(self):
-        return self.role == UserRole.USER
 
     def follow_for(self, obj):
         Follow.objects.get_or_create(
@@ -98,7 +76,6 @@ class Follow(models.Model):
         User,
         on_delete=models.CASCADE,
         verbose_name="Пользователь - кто подписан",
-        related_name="follower"
     )
     author = models.ForeignKey(
         User,
@@ -121,4 +98,4 @@ class Follow(models.Model):
         ]
 
     def __str__(self):
-        return f"{self.user} follows {self.author}"
+        return f"{self.user} подписался на {self.author}"

@@ -8,6 +8,7 @@ from users.models import User
 class Ingredient(models.Model):
     name = models.CharField(
         max_length=250,
+        unique=True,
         verbose_name='Наименование ингредиента',
         db_index=True,
     )
@@ -46,7 +47,7 @@ class Recipe(models.Model):
     tags = models.ManyToManyField(
         Tag,
         verbose_name='Тэги',
-        related_name="recipes",
+        symmetrical=False,
     )
     author = models.ForeignKey(
         User,
@@ -60,7 +61,8 @@ class Recipe(models.Model):
     )
     ingredients = models.ManyToManyField(
         Ingredient,
-        through='IngredientInRecipe'
+        through='IngredientInRecipe',
+        symmetrical=False
     )
     cooking_time = models.PositiveSmallIntegerField(
         validators=[
@@ -139,8 +141,7 @@ class Favorite(models.Model):
     )
     recipe = models.ForeignKey(
         Recipe,
-        on_delete=models.CASCADE,
-        related_name='favorites',
+        on_delete=models.CASCADE
     )
     date_added = models.DateTimeField(
         auto_now_add=True,
@@ -170,8 +171,7 @@ class Purchase(models.Model):
     )
     recipe = models.ForeignKey(
         Recipe,
-        on_delete=models.CASCADE,
-        related_name='purchases',
+        on_delete=models.CASCADE
     )
     date_added = models.DateTimeField(
         auto_now_add=True,
