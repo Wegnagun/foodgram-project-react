@@ -8,6 +8,7 @@ from rest_framework.permissions import SAFE_METHODS, IsAuthenticated
 from rest_framework.response import Response
 
 from users.pagination import CustomPagination
+from .filters import RecipeFilter
 from .models import Recipe, Ingredient, Purchase, IngredientInRecipe, Favorite
 from .serializers import (
     RecipesSerializer, IngredientSerializer, RecipeCreateSerializer,
@@ -20,6 +21,7 @@ class RecipesViewSet(viewsets.ModelViewSet):
     queryset = Recipe.objects.all()
     pagination_class = CustomPagination
     filter_backends = (DjangoFilterBackend,)
+    filter_class = RecipeFilter
 
     def get_serializer_class(self):
         if self.request.method in SAFE_METHODS:
