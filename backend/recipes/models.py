@@ -6,6 +6,7 @@ from users.models import User
 
 
 class Ingredient(models.Model):
+    """ Модель ингредиентов. """
     name = models.CharField(
         max_length=250,
         unique=True,
@@ -26,8 +27,53 @@ class Ingredient(models.Model):
         return f'{self.name}/{self.measurement_unit}'
 
 
+class IngredientInRecipe(models.Model):
+    """ Модель ингредиентов в рецепте. """
+    recipe_parent = models.ForeignKey(
+        'Recipe',
+        on_delete=models.CASCADE,
+        verbose_name='Рецепт',
+        related_name='+'
+    )
+    ingredient = models.ForeignKey(
+        Ingredient,
+        on_delete=models.CASCADE,
+        verbose_name='Название ингредиента в рецепте',
+        related_name='+'
+    )
+    amount = models.PositiveSmallIntegerField(
+        verbose_name='Количество ингредиента в рецепте',
+        validators=[
+            MinValueValidator(
+                1,
+                message='Количество ингредиентов не может быть меньше 1.'
+            ),
+            MaxValueValidator(
+                32767,
+                message='Количество ингредиентов не может быть больше 32767.'
+            )
+        ]
+    )
+
+    class Meta:
+        verbose_name = 'Количество ингредиента в рецепте'
+        verbose_name_plural = 'Количество ингредиентов в рецептах'
+        constraints = [
+            models.UniqueConstraint(
+                fields=['ingredient', 'recipe_parent'],
+                name='recipe_ingredient_unique',
+            )
+        ]
+
+    def __str__(self) -> str:
+        return (
+            f"{self.ingredient} в рецепте {self.recipe_parent} - "
+            f"{self.amount} {self.ingredient.measurement_unit}"
+        )
+
+
 class Recipe(models.Model):
-    """Модель рецептов."""
+    """ Модель рецептов. """
     name = models.CharField(
         verbose_name='Название рецепта',
         max_length=200,
@@ -60,8 +106,7 @@ class Recipe(models.Model):
         auto_now_add=True
     )
     ingredients = models.ManyToManyField(
-        Ingredient,
-        through='IngredientInRecipe',
+        IngredientInRecipe,
         symmetrical=False
     )
     cooking_time = models.PositiveSmallIntegerField(
@@ -88,48 +133,6 @@ class Recipe(models.Model):
 
     def __str__(self):
         return self.name
-
-
-class IngredientInRecipe(models.Model):
-    """Модель ингредиентов в рецепте."""
-    recipe = models.ForeignKey(
-        Recipe,
-        on_delete=models.CASCADE,
-        verbose_name='Рецепт')
-    ingredient = models.ForeignKey(
-        Ingredient,
-        on_delete=models.CASCADE,
-        verbose_name='Название ингредиента в рецепте')
-    amount = models.PositiveSmallIntegerField(
-        verbose_name='Количество ингредиента в рецепте',
-        validators=[
-            MinValueValidator(
-                1,
-                message='Количество ингредиентов не может быть меньше 1.'
-            ),
-            MaxValueValidator(
-                32767,
-                message='Количество ингредиентов не может быть больше 32767.'
-            )
-        ]
-    )
-
-    class Meta:
-        verbose_name = 'Количество ингредиента в рецепте'
-        verbose_name_plural = 'Количество ингредиентов в рецептах'
-        default_related_name = 'ingredients_recipe'
-        constraints = [
-            models.UniqueConstraint(
-                fields=['ingredient', 'recipe'],
-                name='recipe_ingredient_unique',
-            )
-        ]
-
-    def __str__(self) -> str:
-        return (
-            f"{self.ingredient} в рецепте {self.recipe} - {self.amount} "
-            f"{self.ingredient.measurement_unit}"
-        )
 
 
 class Favorite(models.Model):

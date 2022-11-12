@@ -5,11 +5,11 @@ from .models import Tag
 from django.utils.html import format_html
 
 
+@admin.register(Tag)
 class TagsAdmin(BaseAdminSettings):
     """Отображаемые поля админки раздела тэги."""
     list_display = (
         'name',
-        'color',
         'colored',
         'slug'
     )
@@ -24,6 +24,3 @@ class TagsAdmin(BaseAdminSettings):
             f'color: {obj.color}";>___________</span>'
         )
     colored.short_description = 'цвет'
-
-
-admin.site.register(Tag, TagsAdmin)

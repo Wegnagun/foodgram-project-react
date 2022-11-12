@@ -1,6 +1,5 @@
 from django.shortcuts import get_object_or_404
-from djoser.views import UserViewSet as DjoserUserViewSet
-from rest_framework import status
+from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -8,15 +7,13 @@ from rest_framework.response import Response
 from recipes.serializers import SubscribeSerializer
 from .models import User
 from .pagination import CustomPagination
-from .serializers import UserSerializer
 
 
-class UsersViewSet(DjoserUserViewSet):
+class UsersViewSet(viewsets.ModelViewSet):
     """Контроллер пользователей."""
     pagination_class = CustomPagination
     queryset = User.objects.all()
-    serializer_class = UserSerializer
-    additional_serializer = SubscribeSerializer
+    serializer_class = SubscribeSerializer
     lookup_field = 'pk'
     search_fields = ('username',)
 
@@ -30,11 +27,10 @@ class UsersViewSet(DjoserUserViewSet):
         if request.method != 'POST':
             request.user.subscribe.remove(author)
             return Response(status=status.HTTP_204_NO_CONTENT)
-        if not author.following.filter(user=request.user).exists():
+        if not request.user.subscribe.filter(user=request.user).exists():
             request.user.subscribe.add(author)
-            subscribe = request.user.subscribe.filter(id=pk).first()
-            serializer = self.additional_serializer(
-                subscribe, context={'request': request}
+            serializer = self.serializer_class(
+                author, context={'request': request}
             )
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(

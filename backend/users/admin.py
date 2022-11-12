@@ -9,6 +9,7 @@ class BaseAdminSettings(admin.ModelAdmin):
     list_filter = ('email', 'username')
 
 
+@admin.register(User)
 class UserAdmin(BaseAdminSettings):
     """Отображаемые поля админки раздела пользователи."""
     list_display = (
@@ -21,6 +22,3 @@ class UserAdmin(BaseAdminSettings):
     )
     list_display_links = ('id', 'username')
     search_fields = ('role', 'username')
-
-
-admin.site.register(User, UserAdmin)

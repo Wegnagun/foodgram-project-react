@@ -262,9 +262,3 @@ class SubscribeSerializer(UserSerializer):
             many=True,
             context={'request': queryset}
         ).data
-
-    def get_is_subscribed(self, author):
-        return Follow.objects.filter(
-            user=self.context.get('request').user,
-            author=author
-        ).exists()
