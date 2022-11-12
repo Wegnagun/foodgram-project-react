@@ -4,7 +4,7 @@ from .models import User
 
 
 class UserSerializer(serializers.ModelSerializer):
-    """Сериализатор модели пользователей."""
+    """ Сериализатор модели пользователей. """
     is_subscribed = serializers.SerializerMethodField()
 
     class Meta:

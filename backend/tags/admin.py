@@ -7,7 +7,7 @@ from django.utils.html import format_html
 
 @admin.register(Tag)
 class TagsAdmin(BaseAdminSettings):
-    """Отображаемые поля админки раздела тэги."""
+    """ Отображаемые поля админки раздела тэги. """
     list_display = (
         'name',
         'colored',
