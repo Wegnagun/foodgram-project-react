@@ -6,7 +6,6 @@ from rest_framework.response import Response
 
 from recipes.serializers import SubscribeSerializer
 from .models import User
-from .pagination import CustomPagination
 
 
 class UsersViewSet(viewsets.GenericViewSet):
