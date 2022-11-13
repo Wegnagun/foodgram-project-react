@@ -22,7 +22,7 @@ class RecipesViewSet(viewsets.ModelViewSet):
     pagination_class = CustomPagination
     filter_fields = ('tags',)
     filter_backends = (DjangoFilterBackend,)
-    filterset_class = RecipeFilter
+    filter_class = RecipeFilter
 
     def get_serializer_class(self):
         if self.request.method in SAFE_METHODS:
