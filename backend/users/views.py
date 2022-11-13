@@ -9,12 +9,10 @@ from .models import User
 from .pagination import CustomPagination
 
 
-class UsersViewSet(viewsets.ModelViewSet):
-    """Контроллер пользователей."""
-    pagination_class = CustomPagination
+class UsersViewSet(viewsets.GenericViewSet):
+    """ Контроллер пользователей. """
     queryset = User.objects.all()
     serializer_class = SubscribeSerializer
-    lookup_field = 'pk'
     search_fields = ('username',)
 
     @action(
@@ -27,7 +25,7 @@ class UsersViewSet(viewsets.ModelViewSet):
         if request.method != 'POST':
             request.user.subscribe.remove(author)
             return Response(status=status.HTTP_204_NO_CONTENT)
-        if not request.user.subscribe.filter(user=request.user).exists():
+        if not request.user.subscribe.filter(id=pk).exists():
             request.user.subscribe.add(author)
             serializer = self.serializer_class(
                 author, context={'request': request}

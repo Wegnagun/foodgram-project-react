@@ -49,8 +49,7 @@ class RecipesSerializer(serializers.ModelSerializer):
     author = UserSerializer(read_only=True)
     ingredients = IngredientInRecipeSerializer(
         many=True,
-        read_only=True,
-        source='ingredients_recipe',
+        read_only=True
     )
     is_in_shopping_cart = serializers.SerializerMethodField(read_only=True)
     is_favorited = serializers.SerializerMethodField(read_only=True)
@@ -67,13 +66,13 @@ class RecipesSerializer(serializers.ModelSerializer):
         request = self.context.get('request')
         if request.user.is_anonymous:
             return False
-        return request.user.favorites.exists()
+        return request.user.favorites.filter(recipe=obj).exists()
 
     def get_is_in_shopping_cart(self, obj):
         request = self.context.get('request')
         if request.user.is_anonymous:
             return False
-        return request.user.purchases.exists()
+        return request.user.purchases.filter(recipe=obj).exists()
 
 
 class AddIngredientSerializer(serializers.ModelSerializer):
@@ -123,7 +122,7 @@ class RecipeCreateSerializer(serializers.ModelSerializer):
     def create_ingredients(self, recipe, ingredients):
         IngredientInRecipe.objects.bulk_create([
             IngredientInRecipe(
-                recipe=recipe,
+                recipe_parent=recipe,
                 amount=ingredient['amount'],
                 ingredient=ingredient['ingredient'],
             ) for ingredient in ingredients
