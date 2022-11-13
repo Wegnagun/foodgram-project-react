@@ -3,6 +3,7 @@ from rest_framework.permissions import AllowAny
 
 from .models import Tag
 from .serializers import TagSerializer
+from recipes.filters import RecipeFilter
 
 
 class TagViewSet(mixins.ListModelMixin,
@@ -14,3 +15,4 @@ class TagViewSet(mixins.ListModelMixin,
     serializer_class = TagSerializer
     permission_classes = [AllowAny, ]
     pagination_class = None
+    filter_class = RecipeFilter

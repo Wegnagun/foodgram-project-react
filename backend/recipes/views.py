@@ -97,3 +97,4 @@ class IngredientViewSet(viewsets.ModelViewSet):
     serializer_class = IngredientSerializer
     filter_backends = (DjangoFilterBackend,)
     search_fields = ('^name',)
+    pagination_class = None
