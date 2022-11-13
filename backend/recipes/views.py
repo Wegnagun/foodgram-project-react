@@ -20,6 +20,7 @@ class RecipesViewSet(viewsets.ModelViewSet):
     """ Контроллер рецептов. """
     queryset = Recipe.objects.all()
     pagination_class = CustomPagination
+    filter_fields = ('tags',)
     filter_backends = (DjangoFilterBackend,)
     filterset_class = RecipeFilter
 
