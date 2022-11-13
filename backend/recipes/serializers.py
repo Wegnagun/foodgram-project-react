@@ -11,7 +11,7 @@ from .models import (
 
 
 class IngredientSerializer(serializers.ModelSerializer):
-    """Сериализатор модели ингредиентов."""
+    """ Сериализатор модели ингредиентов. """
     class Meta:
         model = Ingredient
         fields = (
@@ -22,7 +22,7 @@ class IngredientSerializer(serializers.ModelSerializer):
 
 
 class IngredientInRecipeSerializer(serializers.ModelSerializer):
-    """Сериализатор ингредиентов в рецепте."""
+    """ Сериализатор ингредиентов в рецепте. """
     id = serializers.PrimaryKeyRelatedField(
         source='ingredient',
         read_only=True
@@ -44,7 +44,7 @@ class IngredientInRecipeSerializer(serializers.ModelSerializer):
 
 
 class RecipesSerializer(serializers.ModelSerializer):
-    """Сериализатор модели рецептов."""
+    """ Сериализатор модели рецептов. """
     tags = TagSerializer(many=True, read_only=True)
     author = UserSerializer(read_only=True)
     ingredients = IngredientInRecipeSerializer(
@@ -77,7 +77,7 @@ class RecipesSerializer(serializers.ModelSerializer):
 
 
 class AddIngredientSerializer(serializers.ModelSerializer):
-    """Сериализатор добавления ингредиентов."""
+    """ Сериализатор добавления ингредиентов. """
     id = serializers.PrimaryKeyRelatedField(
         source='ingredient', queryset=Ingredient.objects.all()
     )
@@ -104,7 +104,7 @@ class AddIngredientSerializer(serializers.ModelSerializer):
 
 
 class RecipeCreateSerializer(serializers.ModelSerializer):
-    """Сериализатор создания рецепта."""
+    """ Сериализатор создания рецепта. """
     image = Base64ImageField(use_url=True, max_length=None)
     author = UserSerializer(read_only=True)
     ingredients = AddIngredientSerializer(many=True)
@@ -176,14 +176,14 @@ class RecipeCreateSerializer(serializers.ModelSerializer):
 
 
 class RecipeShortInfoSerializer(serializers.ModelSerializer):
-    """Краткая инфа о рецепте."""
+    """ Краткая инфа о рецепте. """
     class Meta:
         model = Recipe
         fields = ('id', 'name', 'image', 'cooking_time')
 
 
 class PurchaseSerializer(serializers.ModelSerializer):
-    """Сериализатор списка покупок."""
+    """ Сериализатор списка покупок. """
     class Meta:
         model = Purchase
         fields = ['recipe', 'user']
@@ -212,6 +212,7 @@ class PurchaseSerializer(serializers.ModelSerializer):
 
 
 class FavoriteSerializer(serializers.ModelSerializer):
+    """ Сериализатор избранного. """
     class Meta:
         model = Favorite
         fields = ('user', 'recipe')

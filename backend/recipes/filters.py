@@ -1,12 +1,14 @@
 import django_filters as filters
 
 from .models import Recipe, User
+from tags.models import Tag
 
 
 class RecipeFilter(filters.FilterSet):
-    tags = filters.AllValuesMultipleFilter(
-        field_name='tags__slug'
-    )
+    tags = filters.tags = filters.ModelMultipleChoiceFilter(
+           queryset=Tag.objects.all(),
+           field_name='tags__slug'
+      )
     author = filters.ModelChoiceFilter(
         queryset=User.objects.all()
     )

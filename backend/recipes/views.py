@@ -17,7 +17,7 @@ from .serializers import (
 
 
 class RecipesViewSet(viewsets.ModelViewSet):
-    """Контроллер рецептов."""
+    """ Контроллер рецептов. """
     queryset = Recipe.objects.all()
     pagination_class = CustomPagination
     filter_backends = (DjangoFilterBackend,)
@@ -92,9 +92,9 @@ class RecipesViewSet(viewsets.ModelViewSet):
 
 
 class IngredientViewSet(viewsets.ModelViewSet):
-    """Контроллер ингредиентов."""
+    """ Контроллер ингредиентов. """
     queryset = Ingredient.objects.all()
     serializer_class = IngredientSerializer
     filter_backends = (DjangoFilterBackend,)
-    search_fields = ('^name',)
+    search_fields = (r'^name',)
     pagination_class = None
