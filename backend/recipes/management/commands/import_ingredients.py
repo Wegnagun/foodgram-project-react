@@ -19,7 +19,7 @@ class Command(BaseCommand):
             for elem in set(options_list):
                 if elem is not None:
                     try:
-                        file = open(f'../data/{elem}',
+                        file = open(f'data/{elem}',
                                     'r', encoding='utf-8')
                     except IOError:
                         self.stdout.write(self.style.ERROR(
@@ -37,7 +37,7 @@ class Command(BaseCommand):
         else:
             for model, data in TABLES:
                 try:
-                    file = open(f'../data/{data}', 'r',
+                    file = open(f'data/{data}', 'r',
                                 encoding='utf-8')
                 except IOError:
                     self.stdout.write(self.style.ERROR(
