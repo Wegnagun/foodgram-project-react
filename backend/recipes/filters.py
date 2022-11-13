@@ -1,7 +1,6 @@
 import django_filters as filters
 
-from tags.models import Tag
-from .models import Recipe, User, Ingredient
+from .models import Recipe, Ingredient
 
 
 class IngredientSearchFilter(filters.FilterSet):
