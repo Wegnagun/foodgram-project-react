@@ -1,24 +1,26 @@
 import django_filters as filters
 
 from tags.models import Tag
-from .models import Recipe, User
+from .models import Recipe, User, Ingredient
+
+
+class IngredientSearchFilter(filters.FilterSet):
+    """Фильтр поиска по названию ингредиента."""
+    name = filters.CharFilter(lookup_expr='istartswith')
+
+    class Meta:
+        model = Ingredient
+        fields = ('name', )
 
 
 class RecipeFilter(filters.FilterSet):
-    """ Фильт для рецептов и тегов. """
-    tags = filters.tags = filters.ModelMultipleChoiceFilter(
-        queryset=Tag.objects.all(),
-        field_name='tags__slug'
-    )
-    author = filters.ModelChoiceFilter(
-        queryset=User.objects.all()
-    )
-    is_favorited = filters.NumberFilter(
-        method='get_is_favorited'
-    )
-    is_in_shopping_cart = filters.NumberFilter(
+    """ Фильтр для рецептов и тегов. """
+    tags = filters.AllValuesMultipleFilter(field_name='tags__slug')
+    is_favorited = filters.BooleanFilter(method='get_is_favorited')
+    is_in_shopping_cart = filters.BooleanFilter(
         method='get_is_in_shopping_cart'
     )
+    author = filters.AllValuesMultipleFilter(field_name='author__username')
 
     class Meta:
         model = Recipe
