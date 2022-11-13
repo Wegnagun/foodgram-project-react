@@ -2,7 +2,7 @@ version: '3.8'
 services:
 
   db:
-    image: postgres:13-alpine # postgres:14.4-alpine  заменил иначе не запускался сервак...
+    image: postgres:13.0-alpine # postgres:14.4-alpine  заменил иначе не запускался сервак...
     volumes:
       - db_value:/var/lib/postgresql/data/
     env_file:
