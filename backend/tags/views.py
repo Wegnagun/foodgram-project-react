@@ -8,7 +8,9 @@ from .serializers import TagSerializer
 class TagViewSet(mixins.ListModelMixin,
                  mixins.RetrieveModelMixin,
                  viewsets.GenericViewSet):
-    """Контроллер тэгов."""
+    """ Контроллер тэгов. """
+
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
     permission_classes = [AllowAny, ]
+    pagination_class = None
