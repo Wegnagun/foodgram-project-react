@@ -59,7 +59,7 @@ jobs:
           script: |
             sudo docker pull ${{ secrets.USER }}/foodgram:latest
             sudo docker pull ${{ secrets.USER }}/foodgram-front:latest
-            cd foodgram-project-react/infra/
+            cd foodgram-project-react/infra/ # комент для пуша
             sudo docker-compose stop
             sudo docker-compose rm -f backend
       - name: docker-compose up
