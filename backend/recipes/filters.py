@@ -5,6 +5,7 @@ from .models import Recipe, User
 
 
 class RecipeFilter(filters.FilterSet):
+    """ Фильт для рецептов и тегов. """
     tags = filters.tags = filters.ModelMultipleChoiceFilter(
         queryset=Tag.objects.all(),
         field_name='tags__slug'
