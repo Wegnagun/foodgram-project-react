@@ -62,7 +62,7 @@ class RecipesViewSet(viewsets.ModelViewSet):
         url_path='download_shopping_cart',
         permission_classes=(IsAuthenticated,)
     )
-    def download_shopping_cart(self, request):    # добавить в реквайрементс reportlab
+    def download_shopping_cart(self, request):
         shopping_cart = (
             IngredientInRecipe.objects.filter(
                 recipe_parent__purchases__user=request.user
