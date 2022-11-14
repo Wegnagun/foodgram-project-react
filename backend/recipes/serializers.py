@@ -47,10 +47,7 @@ class RecipesSerializer(serializers.ModelSerializer):
     """ Сериализатор модели рецептов. """
     tags = TagSerializer(many=True, read_only=True)
     author = UserSerializer(read_only=True)
-    ingredients = IngredientInRecipeSerializer(
-        many=True,
-        read_only=True
-    )
+    ingredients = serializers.SerializerMethodField()
     is_in_shopping_cart = serializers.SerializerMethodField(read_only=True)
     is_favorited = serializers.SerializerMethodField(read_only=True)
 
@@ -61,6 +58,11 @@ class RecipesSerializer(serializers.ModelSerializer):
             'is_favorited', 'is_in_shopping_cart',
             'name', 'image', 'text', 'cooking_time'
         )
+
+    @staticmethod
+    def get_ingredients(obj):
+        ingredients = IngredientInRecipe.objects.filter(recipe_parent=obj)
+        return IngredientInRecipeSerializer(ingredients, many=True).data
 
     def get_is_favorited(self, obj):
         request = self.context.get('request')
@@ -161,7 +163,7 @@ class RecipeCreateSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         ingredients = validated_data.pop('ingredients')
         recipe = instance
-        IngredientInRecipe.objects.filter(recipe=recipe).delete()
+        IngredientInRecipe.objects.filter(recipe_parent=recipe).delete()
         self.create_ingredients(recipe, ingredients)
         return super().update(recipe, validated_data)
 
