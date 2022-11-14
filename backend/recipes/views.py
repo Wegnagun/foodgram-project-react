@@ -1,5 +1,4 @@
-from django.db.models import Sum, F
-from django.http import HttpResponse
+from django.db.models import Sum
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets, status
@@ -7,6 +6,7 @@ from rest_framework.decorators import action
 from rest_framework.permissions import SAFE_METHODS, IsAuthenticated
 from rest_framework.response import Response
 
+from recipes.utils import create_shopping_cart
 from users.pagination import CustomPagination
 from .filters import RecipeFilter, IngredientSearchFilter
 from .models import Recipe, Ingredient, Purchase, IngredientInRecipe, Favorite
@@ -62,24 +62,18 @@ class RecipesViewSet(viewsets.ModelViewSet):
         url_path='download_shopping_cart',
         permission_classes=(IsAuthenticated,)
     )
-    def download_shopping_cart(self, request):
-        purchase_list = IngredientInRecipe.objects.filter(
-            recipe_parent__purchases__user=request.user
-        ).values(
-            name=F('ingredient__name'),
-            measurement_unit=F('ingredient__measurement_unit')
-        ).annotate(amount=Sum('amount')).values_list(
-            'ingredient__name', 'amount', 'ingredient__measurement_unit'
+    def download_shopping_cart(self, request):    # добавить в реквайрементс reportlab
+        shopping_cart = (
+            IngredientInRecipe.objects.filter(
+                recipe_parent__purchases__user=request.user
+            ).values(
+                'ingredient__name',
+                'ingredient__measurement_unit',
+            ).order_by(
+                'ingredient__name'
+            ).annotate(ingredient_value=Sum('amount'))
         )
-        text = 'Cписок покупок:  \n '
-        for ingredients in purchase_list:
-            name, measurement_unit, amount = ingredients
-            text += f' {name} :  {amount}   {measurement_unit} \n '
-        response = HttpResponse(text, content_type='text/plain')
-        response['Content-Disposition'] = (
-            'attachment; filename="purchase_list.pdf"'
-        )
-        return response
+        return create_shopping_cart(shopping_cart)
 
     @action(detail=True, methods=['post'])
     def favorite(self, request, pk):
