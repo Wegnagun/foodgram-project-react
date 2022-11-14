@@ -22,3 +22,4 @@ class UserAdmin(BaseAdminSettings):
     )
     list_display_links = ('id', 'username')
     search_fields = ('role', 'username')
+    exclude = ('groups',)
