@@ -145,7 +145,7 @@ class Favorite(models.Model):
     recipe = models.ForeignKey(
         Recipe,
         on_delete=models.CASCADE,
-        related_name='+',
+        related_name='favoriting',
     )
     date_added = models.DateTimeField(
         auto_now_add=True,
