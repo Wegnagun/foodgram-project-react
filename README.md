@@ -1,4 +1,4 @@
-![Yamdb Workflow Status](https://github.com/wegnagun/yamdb_final/actions/workflows/yamdb_workflow.yml/badge.svg?branch=master&event=push)  
+[![foodgram-project-react workflow](https://github.com/Wegnagun/foodgram-project-react/actions/workflows/yamdb_workflow.yml/badge.svg)](https://github.com/Wegnagun/foodgram-project-react/actions/workflows/yamdb_workflow.yml)
 #### praktikum Диплом  
 # Foodgram - «Продуктовый помощник»  
 
